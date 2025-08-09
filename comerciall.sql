@@ -145,3 +145,35 @@ INSERT INTO Venda (id_cliente) VALUES (1);
 INSERT INTO Item_Venda (id_venda, id_produto, quantidade, preco_venda, desconto) VALUES
 (1, 1, 2, 3999.00, 0.00), 
 (1, 2, 3, 149.90, 10.00);  
+
+SELECT 
+    v.id_venda AS 'Código Venda',
+    DATE_FORMAT(v.data_venda, '%d/%m/%Y') AS 'Data',
+    c.nome AS 'Cliente',
+    COUNT(iv.id_item) AS 'Itens',
+    v.total_venda AS 'Total R$',
+    v.status AS 'Status'
+FROM 
+    Venda v
+JOIN 
+    Cliente c ON v.id_cliente = c.id_cliente
+LEFT JOIN 
+    Item_Venda iv ON v.id_venda = iv.id_venda
+GROUP BY 
+    v.id_venda
+ORDER BY 
+    v.data_venda DESC;
+
+
+SELECT 
+    p.nome AS 'Produto',
+    iv.quantidade AS 'Qtd',
+    iv.preco_venda AS 'Preço Unit. R$',
+    iv.desconto AS 'Desconto R$',
+    (iv.quantidade * (iv.preco_venda - iv.desconto)) AS 'Subtotal R$'
+FROM 
+    Item_Venda iv
+JOIN 
+    Produto p ON iv.id_produto = p.id_produto
+WHERE 
+    iv.id_venda = 1;  
